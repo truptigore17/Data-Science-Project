@@ -1,0 +1,257 @@
+> setwd("C:/Users/Trupti/Desktop")
+> 
+> require(XLConnect)
+> loan = loadWorkbook("loan.xlsx")
+> loananalysis = readWorksheet(loan, sheet = "loan", header = TRUE)
+> 
+> Res_status<-as.factor(loananalysis$Res_status)
+> Occupation<- as.factor(loananalysis$Occupation)
+> Job_Status<-as.factor(loananalysis$Job_status)
+> Liab_red<- as.factor(loananalysis$Liab_ref)
+> Acc_ref<-as.factor(loananalysis$Acc_ref)
+> decision<-as.factor(loananalysis$Decision)
+> 
+> contrasts(Res_status)
+      rent
+owner    0
+rent     1
+> contrasts(Occupation)
+          driver executive guard_etc labourer manager office_st productio professio
+creative_      0         0         0        0       0         0         0         0
+driver         1         0         0        0       0         0         0         0
+executive      0         1         0        0       0         0         0         0
+guard_etc      0         0         1        0       0         0         0         0
+labourer       0         0         0        1       0         0         0         0
+manager        0         0         0        0       1         0         0         0
+office_st      0         0         0        0       0         1         0         0
+productio      0         0         0        0       0         0         1         0
+professio      0         0         0        0       0         0         0         1
+sales          0         0         0        0       0         0         0         0
+semi_pro       0         0         0        0       0         0         0         0
+unemploye      0         0         0        0       0         0         0         0
+          sales semi_pro unemploye
+creative_     0        0         0
+driver        0        0         0
+executive     0        0         0
+guard_etc     0        0         0
+labourer      0        0         0
+manager       0        0         0
+office_st     0        0         0
+productio     0        0         0
+professio     0        0         0
+sales         1        0         0
+semi_pro      0        1         0
+unemploye     0        0         1
+> contrasts(Job_Status)
+          military private_s retired self_empl student unemploye
+governmen        0         0       0         0       0         0
+military         1         0       0         0       0         0
+private_s        0         1       0         0       0         0
+retired          0         0       1         0       0         0
+self_empl        0         0       0         1       0         0
+student          0         0       0         0       1         0
+unemploye        0         0       0         0       0         1
+> contrasts(Liab_red)
+  t
+f 0
+t 1
+> contrasts(Acc_ref)
+          oth_inst_
+given             0
+oth_inst_         1
+> contrasts(decision)
+       reject
+accept      0
+reject      1
+> 
+> x<- data.frame(Res_status, Occupation, Job_Status, Liab_red, Acc_ref)
+> loan.fit<-glm(decision ~ Res_status + Occupation+ Job_Status+ Liab_red+ Acc_ref, family="binomial", data=x)
+> summary(loan.fit)
+
+Call:
+glm(formula = decision ~ Res_status + Occupation + Job_Status + 
+    Liab_red + Acc_ref, family = "binomial", data = x)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.2057  -1.0662   0.5474   0.9612   1.9504  
+
+Coefficients:
+                     Estimate Std. Error z value Pr(>|z|)   
+(Intercept)          -0.41690    0.33802  -1.233  0.21743   
+Res_statusrent        0.79288    0.27312   2.903  0.00370 **
+Occupationdriver      0.95195    0.63677   1.495  0.13492   
+Occupationexecutive  -0.39269    0.82181  -0.478  0.63276   
+Occupationguard_etc   1.66730    0.52886   3.153  0.00162 **
+Occupationlabourer    0.76282    0.42015   1.816  0.06944 . 
+Occupationmanager     0.17805    0.47322   0.376  0.70673   
+Occupationoffice_st  -0.39815    0.37943  -1.049  0.29402   
+Occupationproductio  -0.07408    0.37861  -0.196  0.84487   
+Occupationprofessio  -1.45715    0.61684  -2.362  0.01816 * 
+Occupationsales       0.37712    0.43581   0.865  0.38686   
+Occupationsemi_pro   -1.13380    0.57578  -1.969  0.04893 * 
+Occupationunemploye -12.04586  882.74365  -0.014  0.98911   
+Job_Statusmilitary   15.33162  882.74345   0.017  0.98614   
+Job_Statusprivate_s   0.57225    0.29014   1.972  0.04857 * 
+Job_Statusretired    -0.28588    1.17367  -0.244  0.80756   
+Job_Statusself_empl  -0.18964    0.51340  -0.369  0.71185   
+Job_Statusstudent     1.06694    1.25777   0.848  0.39628   
+Job_Statusunemploye  14.22015  882.74348   0.016  0.98715   
+Liab_redt            -0.34865    0.21881  -1.593  0.11107   
+Acc_refoth_inst_      0.78921    0.47358   1.666  0.09562 . 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 589.99  on 428  degrees of freedom
+Residual deviance: 508.92  on 408  degrees of freedom
+AIC: 550.92
+
+Number of Fisher Scoring iterations: 13
+
+> 
+> newdata1= data.frame(Res_status="owner", Occupation="creative_", Job_Status="governmen", Liab_red ="f", Acc_ref="given")
+> summary(newdata1)
+ Res_status     Occupation     Job_Status Liab_red  Acc_ref 
+ owner:1    creative_:1    governmen:1    f:1      given:1  
+> predict(loan.fit, newdata1, type="response")
+        1 
+0.3972582 
+> 
+> newdata2= data.frame(Res_status="rent", Occupation="creative_", Job_Status="governmen", Liab_red ="f", Acc_ref="given")
+> summary(newdata2)
+ Res_status     Occupation     Job_Status Liab_red  Acc_ref 
+ rent:1     creative_:1    governmen:1    f:1      given:1  
+> predict(loan.fit, newdata2, type="response")
+        1 
+0.5929028 
+> setwd("C:/Users/Trupti/Desktop")
+> 
+> require(XLConnect)
+> loan = loadWorkbook("loan.xlsx")
+> loananalysis = readWorksheet(loan, sheet = "loan", header = TRUE)
+> 
+> Res_status<-as.factor(loananalysis$Res_status)
+> Occupation<- as.factor(loananalysis$Occupation)
+> Job_Status<-as.factor(loananalysis$Job_status)
+> Liab_red<- as.factor(loananalysis$Liab_ref)
+> Acc_ref<-as.factor(loananalysis$Acc_ref)
+> decision<-as.factor(loananalysis$Decision)
+> 
+> contrasts(Res_status)
+      rent
+owner    0
+rent     1
+> contrasts(Occupation)
+          driver executive guard_etc labourer manager office_st productio professio
+creative_      0         0         0        0       0         0         0         0
+driver         1         0         0        0       0         0         0         0
+executive      0         1         0        0       0         0         0         0
+guard_etc      0         0         1        0       0         0         0         0
+labourer       0         0         0        1       0         0         0         0
+manager        0         0         0        0       1         0         0         0
+office_st      0         0         0        0       0         1         0         0
+productio      0         0         0        0       0         0         1         0
+professio      0         0         0        0       0         0         0         1
+sales          0         0         0        0       0         0         0         0
+semi_pro       0         0         0        0       0         0         0         0
+unemploye      0         0         0        0       0         0         0         0
+          sales semi_pro unemploye
+creative_     0        0         0
+driver        0        0         0
+executive     0        0         0
+guard_etc     0        0         0
+labourer      0        0         0
+manager       0        0         0
+office_st     0        0         0
+productio     0        0         0
+professio     0        0         0
+sales         1        0         0
+semi_pro      0        1         0
+unemploye     0        0         1
+> contrasts(Job_Status)
+          military private_s retired self_empl student unemploye
+governmen        0         0       0         0       0         0
+military         1         0       0         0       0         0
+private_s        0         1       0         0       0         0
+retired          0         0       1         0       0         0
+self_empl        0         0       0         1       0         0
+student          0         0       0         0       1         0
+unemploye        0         0       0         0       0         1
+> contrasts(Liab_red)
+  t
+f 0
+t 1
+> contrasts(Acc_ref)
+          oth_inst_
+given             0
+oth_inst_         1
+> contrasts(decision)
+       reject
+accept      0
+reject      1
+> 
+> x<- data.frame(Res_status, Occupation, Job_Status, Liab_red, Acc_ref)
+> loan.fit<-glm(decision ~ Res_status + Occupation+ Job_Status+ Liab_red+ Acc_ref, family="binomial", data=x)
+> summary(loan.fit)
+
+Call:
+glm(formula = decision ~ Res_status + Occupation + Job_Status + 
+    Liab_red + Acc_ref, family = "binomial", data = x)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.2057  -1.0662   0.5474   0.9612   1.9504  
+
+Coefficients:
+                     Estimate Std. Error z value Pr(>|z|)   
+(Intercept)          -0.41690    0.33802  -1.233  0.21743   
+Res_statusrent        0.79288    0.27312   2.903  0.00370 **
+Occupationdriver      0.95195    0.63677   1.495  0.13492   
+Occupationexecutive  -0.39269    0.82181  -0.478  0.63276   
+Occupationguard_etc   1.66730    0.52886   3.153  0.00162 **
+Occupationlabourer    0.76282    0.42015   1.816  0.06944 . 
+Occupationmanager     0.17805    0.47322   0.376  0.70673   
+Occupationoffice_st  -0.39815    0.37943  -1.049  0.29402   
+Occupationproductio  -0.07408    0.37861  -0.196  0.84487   
+Occupationprofessio  -1.45715    0.61684  -2.362  0.01816 * 
+Occupationsales       0.37712    0.43581   0.865  0.38686   
+Occupationsemi_pro   -1.13380    0.57578  -1.969  0.04893 * 
+Occupationunemploye -12.04586  882.74365  -0.014  0.98911   
+Job_Statusmilitary   15.33162  882.74345   0.017  0.98614   
+Job_Statusprivate_s   0.57225    0.29014   1.972  0.04857 * 
+Job_Statusretired    -0.28588    1.17367  -0.244  0.80756   
+Job_Statusself_empl  -0.18964    0.51340  -0.369  0.71185   
+Job_Statusstudent     1.06694    1.25777   0.848  0.39628   
+Job_Statusunemploye  14.22015  882.74348   0.016  0.98715   
+Liab_redt            -0.34865    0.21881  -1.593  0.11107   
+Acc_refoth_inst_      0.78921    0.47358   1.666  0.09562 . 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 589.99  on 428  degrees of freedom
+Residual deviance: 508.92  on 408  degrees of freedom
+AIC: 550.92
+
+Number of Fisher Scoring iterations: 13
+
+> 
+> newdata1= data.frame(Res_status="owner", Occupation="creative_", Job_Status="governmen", Liab_red ="f", Acc_ref="given")
+> summary(newdata1)
+ Res_status     Occupation     Job_Status Liab_red  Acc_ref 
+ owner:1    creative_:1    governmen:1    f:1      given:1  
+> predict(loan.fit, newdata1, type="response")
+        1 
+0.3972582 
+> 
+> newdata2= data.frame(Res_status="rent", Occupation="creative_", Job_Status="governmen", Liab_red ="f", Acc_ref="given")
+> summary(newdata2)
+ Res_status     Occupation     Job_Status Liab_red  Acc_ref 
+ rent:1     creative_:1    governmen:1    f:1      given:1  
+> predict(loan.fit, newdata2, type="response")
+        1 
+0.5929028 
+> 
