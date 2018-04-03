@@ -1,18 +1,18 @@
-install.packages(c("NLP", "openNLP", "RWeka", "rvest","rJava","SnowballC","tm","RTextTools","RWekajars"))
+# install.packages(c("NLP", "openNLP", "RWeka", "rvest","rJava","SnowballC","tm","RTextTools","RWekajars"))
 library(tm)
 library(RTextTools)
 library(rvest)
-install.packages('dplyr')
-install.packages('plyr')
-install.packages("stringr")
+#install.packages('dplyr')
+#install.packages('plyr')
+ #install.packages("stringr")
 library(dplyr)
 library(plyr)
 library(stringr)
-install.packages('e1071')
-install.packages('ade4')
+ #install.packages('e1071')
+ #install.packages('ade4')
 library(e1071)
 library(ade4)
-install.packages('wordcloud')
+ #install.packages('wordcloud')
 library(wordcloud)
 options(max.print=1000000)
 #count for number of pages.
@@ -180,7 +180,7 @@ sentimentAnalysis <- function(all_reviews, neglist, poslist){
         fin_Result[i,4]<-"Neutral" 
       }
       else{
-        fin_Result[i,4]<-"Negative"
+         fin_Result[i,4]<-"Negative"
       }
     }
    
