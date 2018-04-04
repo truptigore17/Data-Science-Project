@@ -1,0 +1,5 @@
+batch_size,num_classes,epochs,data_augmentation,num_predictions,model_name,steps_per_epoch,featurewise_center,samplewise_center,featurewise_std_normalization,samplewise_std_normalization,zca_whitening,rotation_range,width_shift_range,height_shift_range,horizontal_flip,vertical_flip
+32,10,90,True,20,keras_cifar10_trained_model1.h5,1600,False,False,False,False,True,0,0.1,0.1,True,False
+32,10,82,True,20,keras_cifar10_trained_model2.h5,1600,False,False,False,True,False,0,0.1,0.1,False,True
+32,10,100,True,20,keras_cifar10_trained_model3.h5,1600,True,False,False,False,False,0,0.1,0.1,True,False
+32,10,60,True,20,keras_cifar10_trained_model5.h5,16,False,False,True,False,False,0,0.1,0.1,False,True
